@@ -123,10 +123,20 @@ void table_t_delete(table_t* t, const char* key) {
                 t->entries[h] = entry->next;
                 tmp->key = NULL;
                 tmp->value = NULL;
-                free(tmp);
                 return;
             } else {
-
+                if (entry->next == NULL) {
+                    // if next is null, end of list
+                    entry->key = NULL;
+                    entry->value = NULL;
+                    prev->next = NULL;
+                    return;
+                } else {
+                    prev->next = prev->next->next;
+                    entry->key = NULL;
+                    entry->value = NULL;
+                    entry->next = NULL;
+                }
             }
         }
 

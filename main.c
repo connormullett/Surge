@@ -16,13 +16,13 @@ int main(int argc, char const *argv[])
     table_t_set(t, "customer", "mike");
     table_t_dump(t);
 
-    printf("delete 'key'\n");
-    table_t_delete(t, "key");
+    printf("delete 'baz'\n");
+    table_t_delete(t, "baz");
     table_t_dump(t); printf("\n");
 
 
-    printf("set 'key'\n");
-    table_t_set(t, "key", "value");
+    printf("set 'baz'\n");
+    table_t_set(t, "baz", "booz");
     table_t_dump(t);
 
     return 0;
