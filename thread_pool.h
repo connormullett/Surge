@@ -13,23 +13,22 @@
 #include <pthread.h>
 
 #include "table.h"
+#include "work_queue.h"
 
 #define SOCKETERROR (-1)
 #define THREAD_POOL_SIZE 20
 #define BUFSIZE 4096
 
-typedef struct sockaddr_in SA_IN;
-typedef struct sockaddr SA;
+static pthread_mutex_t table_thread_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t queue_thread_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t mutex_signal = PTHREAD_COND_INITIALIZER;
+
 
 typedef struct request_t {
     char* operation;
     char* key;
     char* value;
 } request_t;
-
-pthread_mutex_t table_thread_lock = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t queue_thread_lock = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t mutex_signal = PTHREAD_COND_INITIALIZER;
 
 void* handle_connection(void* client_socket, table_t* table);
 void* thread_work_job(void* arg);

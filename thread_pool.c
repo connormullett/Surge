@@ -1,6 +1,5 @@
 
 #include "thread_pool.h"
-#include "work_queue.h"
 
 
 void* thread_work_job(void* arg) {

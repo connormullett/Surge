@@ -1,12 +1,12 @@
 
 CC=clang
 CFLAGS=-g -pthread
-BINS=main scratch
-OBJS=table.o main.o thread_pool.o work_queue.o
+BINS=server scratch
+OBJS=table.o server.o thread_pool.o work_queue.o
 
 all: $(BINS)
 
-main: $(OBJS)
+server: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 scratch: scratch.c
