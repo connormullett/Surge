@@ -12,9 +12,11 @@ int main() {
     token = strtok(copy, "\t");
     puts(token);
 
-    while ((token = strtok(NULL, "\t"))) {
-        puts(token);
-    }
+    token = strtok(NULL, "\t");
+    puts(token);
+
+    token = strtok(NULL, "\t");
+    puts(token);
 
     free(copy);
     copy = NULL;

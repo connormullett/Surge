@@ -10,7 +10,7 @@ main: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 scratch: scratch.c
-	$(CC) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $^
