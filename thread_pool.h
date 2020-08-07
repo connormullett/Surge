@@ -12,7 +12,8 @@
 #include <limits.h>
 #include <pthread.h>
 
-#include "table.h"
+#include <table/table.h>
+
 #include "work_queue.h"
 
 #define SOCKETERROR (-1)
