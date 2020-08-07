@@ -12,13 +12,14 @@ void* thread_work_job(void* arg) {
         // if nothing on the queue, wait
         if ((pclient = dequeue()) == NULL) {
             pthread_cond_wait(&mutex_signal, &queue_thread_lock);
-            // when signaled, try to pop more clients off the queue
+            // when signaled, pop clients off the queue
             pclient = dequeue();
         }
         pthread_mutex_unlock(&queue_thread_lock);
 
         if (pclient != NULL) {
             // handle the client on the socket
+            printf("Connection: handling job on %d\n", *pclient);
             handle_connection(pclient, table);
         }
     }
