@@ -82,7 +82,6 @@ request_t* init_request_t(void) {
 
 
 request_t* parse_request_t(char* buffer) {
-    char* token;
     request_t* request = init_request_t();
     char* copy = (char*)malloc(strlen(buffer) + 1);
 
