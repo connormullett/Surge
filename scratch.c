@@ -2,23 +2,28 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <table/table.h>
+
+#include "cli.h"
+
 
 int main() {
-    char* token;
-    char* request = "set\tname\tfoo";
-    char* copy = (char*)malloc(strlen(request) + 1);
-    
-    strcpy(copy, request);
-    token = strtok(copy, "\t");
-    puts(token);
+    char buffer[100];
+    const char* prompt = "> ";
+    int sz = sizeof(buffer);
 
-    token = strtok(NULL, "\t");
-    puts(token);
+    int rc = get_line(prompt, buffer, sz);
 
-    token = strtok(NULL, "\t");
-    puts(token);
+    if (rc == NO_INPUT) {
+        puts("no input");
+        return 1;
+    }
 
-    free(copy);
-    copy = NULL;
+    if (rc == TOO_LONG) {
+        puts("too long");
+        return 1;
+    }
+
+    printf("OK: %s\n", buffer);
+
+    return 0;
 }

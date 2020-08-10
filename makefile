@@ -3,7 +3,7 @@ CC=clang
 CFLAGS=-g -pthread -Wall -Werror -fPIC
 BINS=server scratch
 LIBS=libtable.so
-OBJS=table.o server.o thread_pool.o work_queue.o
+OBJS=table.o server.o thread_pool.o work_queue.o cli.o
 DESTDIR=/usr
 LIBDIR=$(DESTDIR)/lib
 INCDIR=$(DESTDIR)/include
@@ -13,7 +13,7 @@ all: $(LIBS) $(BINS)
 server: $(OBJS)
 	$(CC) $(CFLAGS) -ltable -o $@ $^
 
-scratch: scratch.c
+scratch: scratch.c cli.c
 	$(CC) $(CFLAGS) -ltable -o $@ $^
 
 %.o: %.c
