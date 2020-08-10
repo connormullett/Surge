@@ -47,19 +47,31 @@ void* handle_connection(void* p_client_socket, table_t* table) {
     printf("%s\n", buffer);
 
     request_t* request = parse_request_t(buffer);
-    // TODO: VALIDATE REQUEST OBJECT (set op must have key and value)
+
+    printf("request->operation:%s:\n", request->operation);
+    printf("request->key      :%s:\n", request->key);
+    printf("request->value    :%s:\n", request->value);
 
     char* value = NULL;
     pthread_mutex_lock(&table_thread_lock);
+
     if ( strcmp(request->operation, "get") == 0 ) {
         value = table_t_get(table, request->key);
+
     } else if ( strcmp(request->operation, "set") == 0 ) {
         table_t_set(table, request->key, request->value);
+
     } else if (strcmp(request->operation, "del") == 0 ) {
         table_t_delete(table, request->key);
+
     } else {
         value = "error has occured";
     }
+
+    printf("out value :: %s\n", value);
+
+    table_t_dump(table);
+
     pthread_mutex_unlock(&table_thread_lock);
 
     if (value == NULL) {
@@ -84,15 +96,10 @@ request_t* init_request_t(void) {
 
 request_t* parse_request_t(char* buffer) {
     request_t* request = init_request_t();
-    char* copy = (char*)malloc(strlen(buffer) + 1);
 
-    strcpy(copy, buffer);
-    request->operation = strtok(copy, "\t");
+    request->operation = strtok(buffer, "\t");
     request->key = strtok(NULL, "\t");
     request->value = strtok(NULL, "\t");
-
-    free(copy);
-    copy = NULL;
 
     return request;
 }
