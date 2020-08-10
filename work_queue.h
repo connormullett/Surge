@@ -9,6 +9,6 @@ typedef struct node {
 
 void enqueue(int* client_socket);
 int* dequeue();
-
+void dump_queue();
 
 #endif

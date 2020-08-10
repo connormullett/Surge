@@ -11,6 +11,7 @@
 
 #include "work_queue.h"
 #include "thread_pool.h"
+#include <table/table.h>
 
 #define SERVER_PORT 5250
 #define SERVER_BACKLOG 100
@@ -23,7 +24,8 @@ int main() {
     int server_socket, client_socket, addr_size;
     SA_IN server_addr, client_addr;
 
-    thread_pool_init();
+    table_t* t = table_t_init();
+    thread_pool_init(t);
 
     check((server_socket = socket(AF_INET, SOCK_STREAM, 0)),
         "Failed to create socket");
@@ -45,17 +47,18 @@ int main() {
         check(client_socket = accept(server_socket,
             (SA*)&client_addr, (socklen_t*)&addr_size),
             "accept failed");
+
+        puts("Connection");
         
         int *pclient = malloc(sizeof(int));
         *pclient = client_socket;
 
-        printf("Connection: writing %d to queue\n", *pclient);
-
         pthread_mutex_lock(&queue_thread_lock);
         enqueue(pclient);
-        pthread_cond_signal(&mutex_signal);
         pthread_mutex_unlock(&queue_thread_lock);
+        pthread_cond_signal(&mutex_signal);
         puts("accepting new connections");
+        handle_connection(pclient, t);
     }
 
     return 0;

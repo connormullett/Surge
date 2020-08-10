@@ -9,17 +9,16 @@ void* thread_work_job(void* arg) {
         int* pclient;
         pthread_mutex_lock(&queue_thread_lock);
 
-        // if nothing on the queue, wait
         if ((pclient = dequeue()) == NULL) {
             pthread_cond_wait(&mutex_signal, &queue_thread_lock);
-            // when signaled, pop clients off the queue
+
             pclient = dequeue();
         }
         pthread_mutex_unlock(&queue_thread_lock);
 
         if (pclient != NULL) {
-            // handle the client on the socket
-            printf("Connection: handling job on %d\n", *pclient);
+
+            printf("Connection: handling job %d\n", *pclient);
             handle_connection(pclient, table);
         }
     }
@@ -45,7 +44,8 @@ void* handle_connection(void* p_client_socket, table_t* table) {
 
     fflush(stdout);
 
-    // parse message from buffer into request
+    printf("%s\n", buffer);
+
     request_t* request = parse_request_t(buffer);
     // TODO: VALIDATE REQUEST OBJECT (set op must have key and value)
 
@@ -98,11 +98,10 @@ request_t* parse_request_t(char* buffer) {
 }
 
 
-pthread_t* thread_pool_init(void) {
-    table_t* table = table_t_init();
+pthread_t* thread_pool_init(table_t* t) {
     pthread_t* thread_pool = (pthread_t*)malloc(sizeof(pthread_t) * THREAD_POOL_SIZE);
     for (int i = 0; i < THREAD_POOL_SIZE; i++) {
-        pthread_create(&thread_pool[i], NULL, thread_work_job, table);
+        pthread_create(&thread_pool[i], NULL, thread_work_job, t);
     }
     return thread_pool;
 }

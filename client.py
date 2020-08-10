@@ -7,7 +7,7 @@ PORT = 5250
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
-    s.sendall(b'\tget\tfoo\n')
+    s.sendall(b'\tset\tfoo\n')
     data = s.recv(1024)
 
-printf(data)
+print(data)

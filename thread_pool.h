@@ -36,6 +36,6 @@ void* thread_work_job(void* arg);
 int check(int exp, const char* msg);
 request_t* parse_request_t(char* buffer);
 
-pthread_t* thread_pool_init(void);
+pthread_t* thread_pool_init(table_t* t);
 
 #endif

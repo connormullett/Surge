@@ -1,6 +1,7 @@
 
 #include "work_queue.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 
 node_t* head = NULL;
@@ -21,6 +22,17 @@ void enqueue(int* client_socket) {
 }
 
 
+void dump_queue() {
+    node_t* tmp = head;
+    puts("work queue :");
+
+    while (tmp != NULL) {
+        printf("%p -> %d\n", tmp, *(tmp->client_socket));
+        tmp = tmp->next;
+    }
+}
+
+
 int* dequeue() {
     if (head == NULL) {
         return NULL;
@@ -32,6 +44,8 @@ int* dequeue() {
     head = head->next;
 
     if (head == NULL) { tail = NULL; }
+
+    printf("%d", *result);
 
     free(tmp);
     return result;
