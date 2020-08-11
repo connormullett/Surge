@@ -35,6 +35,7 @@ void* handle_connection(void* client_socket, table_t* table);
 void* thread_work_job(void* arg);
 int check(int exp, const char* msg);
 request_t* parse_request_t(char* buffer);
+bool validate_request(request_t* request);
 
 pthread_t* thread_pool_init(table_t* t);
 

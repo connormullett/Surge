@@ -148,6 +148,11 @@ void table_t_delete(table_t* t, const char* key) {
 
 
 void table_t_dump(table_t* t) {
+
+    if (t->size == 0) {
+        return;
+    }
+
     entry** entries = t->entries;
 
     for (int i = 0; i < TABLE_SIZE; i++) {

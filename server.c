@@ -11,7 +11,8 @@
 
 #include "work_queue.h"
 #include "thread_pool.h"
-#include <table/table.h>
+#include "cli.h"
+#include "table.h"
 
 #define SERVER_PORT 5250
 #define SERVER_BACKLOG 100
@@ -41,6 +42,9 @@ int main() {
     
     printf("Listening on %d\n", SERVER_PORT);
 
+    // starts cli thread
+    pthread_t* cli_thread = (pthread_t*)malloc(sizeof(pthread_t));
+    pthread_create(cli_thread, NULL, command_line, t);
 
     while(true) {
         addr_size = sizeof(SA_IN);
@@ -58,7 +62,6 @@ int main() {
         enqueue(pclient);
         pthread_mutex_unlock(&queue_thread_lock);
         pthread_cond_signal(&mutex_signal);
-        puts("accepting new connections");
         handle_connection(pclient, t);
     }
 

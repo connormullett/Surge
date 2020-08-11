@@ -1,8 +1,8 @@
 
 #include "cli.h"
 #include "thread_pool.h"
+#include "table.h"
 
-#include <table/table.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -16,6 +16,9 @@ void* command_line(void* arg) {
     int sz = sizeof(buffer);
 
     while (1) {
+        // zero buffer
+        memset(buffer, 0, MAX_COMMAND_SIZE);
+
         input = get_line(prompt, buffer, sz);
 
         // error checking
@@ -27,12 +30,14 @@ void* command_line(void* arg) {
             puts("too long"); error_flag = true;
         }
 
+        pthread_mutex_lock(&table_thread_lock);
+        if (strcmp(buffer, "dump") == 0) {
+            if (table->size == 0) puts("NONE");
+            else table_t_dump(table);
+        }
+        pthread_mutex_unlock(&table_thread_lock);
 
-        // define builtins
-        // parse input
-        // error check
-        // execute
-    }
+    } // while
 }
 
 

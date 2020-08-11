@@ -31,6 +31,7 @@ void* handle_connection(void* p_client_socket, table_t* table) {
     char buffer[BUFSIZE];
     size_t bytes_read;
     int msgsize = 0;
+    char* value = NULL;
     
 
     // read from socket into buffer
@@ -41,38 +42,29 @@ void* handle_connection(void* p_client_socket, table_t* table) {
 
     check(bytes_read, "read error");
     buffer[msgsize-1] = 0;
-
     fflush(stdout);
-
-    printf("%s\n", buffer);
 
     request_t* request = parse_request_t(buffer);
 
-    printf("request->operation:%s:\n", request->operation);
-    printf("request->key      :%s:\n", request->key);
-    printf("request->value    :%s:\n", request->value);
+    if (validate_request(request)) {
 
-    char* value = NULL;
-    pthread_mutex_lock(&table_thread_lock);
+        pthread_mutex_lock(&table_thread_lock);
 
-    if ( strcmp(request->operation, "get") == 0 ) {
-        value = table_t_get(table, request->key);
+        if ( strcmp(request->operation, "get") == 0 ) {
+            value = table_t_get(table, request->key);
 
-    } else if ( strcmp(request->operation, "set") == 0 ) {
-        table_t_set(table, request->key, request->value);
+        } else if ( strcmp(request->operation, "set") == 0 ) {
+            table_t_set(table, request->key, request->value);
 
-    } else if (strcmp(request->operation, "del") == 0 ) {
-        table_t_delete(table, request->key);
+        } else if (strcmp(request->operation, "del") == 0 ) {
+            table_t_delete(table, request->key);
 
-    } else {
-        value = "error has occured";
+        } else {
+            value = "error has occured";
+        }
+
+        pthread_mutex_unlock(&table_thread_lock);
     }
-
-    printf("out value :: %s\n", value);
-
-    table_t_dump(table);
-
-    pthread_mutex_unlock(&table_thread_lock);
 
     if (value == NULL) {
         value = "OK";
@@ -83,6 +75,11 @@ void* handle_connection(void* p_client_socket, table_t* table) {
     free(request);
     close(client_socket);
     return NULL;
+}
+
+bool validate_request(request_t* request) {
+
+    return true;
 }
 
 request_t* init_request_t(void) {
