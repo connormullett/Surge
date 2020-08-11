@@ -12,8 +12,7 @@
 #include <limits.h>
 #include <pthread.h>
 
-#include <table/table.h>
-
+#include "table.h"
 #include "work_queue.h"
 
 #define SOCKETERROR (-1)
@@ -36,6 +35,13 @@ void* thread_work_job(void* arg);
 int check(int exp, const char* msg);
 request_t* parse_request_t(char* buffer);
 bool validate_request(request_t* request);
+
+char* execute(table_t* table, char* buffer);
+
+char* cli_get(table_t* t, request_t* request);
+char* cli_set(table_t* t, request_t* request);
+char* cli_del(table_t* t, request_t* request);
+char* cli_dump(table_t* t, request_t* request);
 
 pthread_t* thread_pool_init(table_t* t);
 

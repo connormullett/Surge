@@ -53,8 +53,6 @@ int main() {
             (SA*)&client_addr, (socklen_t*)&addr_size),
             "accept failed");
 
-        puts("Connection");
-        
         int *pclient = malloc(sizeof(int));
         *pclient = client_socket;
 

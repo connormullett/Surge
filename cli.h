@@ -8,10 +8,10 @@
 
 void* command_line(void* arg);
 
+
 #define OK       0
 #define NO_INPUT 1
 #define TOO_LONG 2
-
 int get_line(const char* prompt, char* buff, size_t sz);
 
 #endif

@@ -2,6 +2,23 @@
 #include "thread_pool.h"
 
 
+char* builtin_str[] = {
+    "get",
+    "set",
+    "del",
+    "dump"
+};
+
+char* (*builtin_func[]) (table_t* t, request_t* request) = {
+    &cli_get,
+    &cli_set,
+    &cli_del,
+    &cli_dump
+};
+
+int cli_num_builtins() { return sizeof(builtin_str) / sizeof(char*); }
+
+
 void* thread_work_job(void* arg) {
     table_t* table = (table_t*)arg;
 
@@ -28,13 +45,13 @@ void* thread_work_job(void* arg) {
 void* handle_connection(void* p_client_socket, table_t* table) {
     int client_socket = *((int*)p_client_socket);
     free(p_client_socket);
+
     char buffer[BUFSIZE];
     size_t bytes_read;
     int msgsize = 0;
     char* value = NULL;
     
 
-    // read from socket into buffer
     while((bytes_read = read(client_socket, buffer + msgsize, sizeof(buffer) - msgsize)) > 0) {
         msgsize += bytes_read;
         if (msgsize > BUFSIZE - 1 || buffer[msgsize - 1] == '\n') break;
@@ -44,27 +61,7 @@ void* handle_connection(void* p_client_socket, table_t* table) {
     buffer[msgsize-1] = 0;
     fflush(stdout);
 
-    request_t* request = parse_request_t(buffer);
-
-    if (validate_request(request)) {
-
-        pthread_mutex_lock(&table_thread_lock);
-
-        if ( strcmp(request->operation, "get") == 0 ) {
-            value = table_t_get(table, request->key);
-
-        } else if ( strcmp(request->operation, "set") == 0 ) {
-            table_t_set(table, request->key, request->value);
-
-        } else if (strcmp(request->operation, "del") == 0 ) {
-            table_t_delete(table, request->key);
-
-        } else {
-            value = "error has occured";
-        }
-
-        pthread_mutex_unlock(&table_thread_lock);
-    }
+    value = execute(table, buffer);
 
     if (value == NULL) {
         value = "OK";
@@ -72,15 +69,57 @@ void* handle_connection(void* p_client_socket, table_t* table) {
 
     write(client_socket, value, strlen(value));
 
-    free(request);
     close(client_socket);
     return NULL;
 }
 
+
+char* execute(table_t* table, char* buffer) {
+    char* value = NULL;
+    request_t* request = parse_request_t(buffer);
+
+    if (validate_request(request)) {
+
+        pthread_mutex_lock(&table_thread_lock);
+
+         for (int i = 0; i < cli_num_builtins(); i++) {
+            if (strcmp(request->operation, builtin_str[i]) == 0)
+                value = (*builtin_func[i])(table, request);
+         }
+
+        pthread_mutex_unlock(&table_thread_lock);
+    }
+
+    return value;
+}
+
+
 bool validate_request(request_t* request) {
 
     return true;
+
 }
+
+
+char* cli_get(table_t* t, request_t* request) {
+    return table_t_get(t, request->key);
+}
+
+char* cli_set(table_t* t, request_t* request) {
+    table_t_set(t, request->key, request->value);
+    return NULL;
+}
+
+char* cli_del(table_t* t, request_t* request) {
+    table_t_delete(t, request->key);
+    return NULL;
+}
+
+char* cli_dump(table_t* t, request_t* request) {
+    table_t_dump(t);
+    return NULL;
+}
+
 
 request_t* init_request_t(void) {
     request_t* out = (request_t*)malloc(sizeof(request_t));

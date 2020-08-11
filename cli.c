@@ -30,12 +30,8 @@ void* command_line(void* arg) {
             puts("too long"); error_flag = true;
         }
 
-        pthread_mutex_lock(&table_thread_lock);
-        if (strcmp(buffer, "dump") == 0) {
-            if (table->size == 0) puts("NONE");
-            else table_t_dump(table);
-        }
-        pthread_mutex_unlock(&table_thread_lock);
+        char* value = execute(table, buffer);
+        printf("%s\n", value);
 
     } // while
 }

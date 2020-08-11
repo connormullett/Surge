@@ -13,7 +13,7 @@ all: $(LIBS) $(BINS)
 server: $(OBJS)
 	$(CC) $(CFLAGS) -ltable -o $@ $^
 
-scratch: scratch.c cli.c
+scratch: $(OBJS)
 	$(CC) $(CFLAGS) -ltable -o $@ $^
 
 %.o: %.c
