@@ -78,26 +78,24 @@ char* execute(table_t* table, char* buffer) {
     char* value = NULL;
     request_t* request = parse_request_t(buffer);
 
-    if (validate_request(request)) {
-
-        pthread_mutex_lock(&table_thread_lock);
-
-         for (int i = 0; i < cli_num_builtins(); i++) {
-            if (strcmp(request->operation, builtin_str[i]) == 0)
-                value = (*builtin_func[i])(table, request);
-         }
-
-        pthread_mutex_unlock(&table_thread_lock);
+    if (request == NULL) {
+        // error out
     }
 
+
+    pthread_mutex_lock(&table_thread_lock);
+
+    for (int i = 0; i < cli_num_builtins(); i++) {
+        if (strcmp(request->operation, builtin_str[i]) == 0) {
+            value = (*builtin_func[i])(table, request);
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&table_thread_lock);
+
+    free(request);
     return value;
-}
-
-
-bool validate_request(request_t* request) {
-
-    return true;
-
 }
 
 
@@ -130,13 +128,38 @@ request_t* init_request_t(void) {
 }
 
 
+#define TOK_DELIM " \t"
 request_t* parse_request_t(char* buffer) {
+    // TODO: this is extremely hacky, rewrite
+
+    size_t len = strlen(buffer);
+    char* copy = (char*)malloc(sizeof(char) * len);
+    memcpy(copy, buffer, len);
+
     request_t* request = init_request_t();
 
-    request->operation = strtok(buffer, "\t");
-    request->key = strtok(NULL, "\t");
-    request->value = strtok(NULL, "\t");
+    // check if token is null
+    char* op = strtok(copy, TOK_DELIM);
+    request->operation = (char*)malloc(sizeof(char) * strlen(op));
+    strcpy(request->operation, op);
 
+    if (strcmp(op, "dump") == 0) return request;
+
+    char* key = strtok(NULL, TOK_DELIM);
+    if (key != NULL) {
+        request->key = (char*)malloc(sizeof(char) * strlen(key));
+        strcpy(request->key, key);
+    }
+
+    if (key != NULL && strcmp(key, "get") == 0) return request;
+
+    char* val = strtok(NULL, TOK_DELIM);
+    if (val != NULL) {
+        request->value = (char*)malloc(sizeof(char) * strlen(val));
+        strcpy(request->value, val);
+    }
+
+    free(copy);
     return request;
 }
 

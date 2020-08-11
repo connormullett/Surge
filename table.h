@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TABLE_SIZE 2
+#define TABLE_SIZE 20
 #define MAX_TABLE_SIZE 4294967295  // uint max
 #define MAX_LOAD_FACTOR 1.5
 
@@ -16,6 +16,7 @@ typedef struct entry {
     char* value;
     struct entry* next;
 } entry;
+// TODO: potentially use union to allow for different typing
 
 typedef struct table_t {
     uint capacity;

@@ -15,13 +15,13 @@ void* command_line(void* arg) {
     const char* prompt = "> ";
     int sz = sizeof(buffer);
 
+    // TODO: graceful exits
+
     while (1) {
-        // zero buffer
         memset(buffer, 0, MAX_COMMAND_SIZE);
 
         input = get_line(prompt, buffer, sz);
 
-        // error checking
         if (input == NO_INPUT) {
             puts("no input"); error_flag = true;
         }
@@ -31,7 +31,8 @@ void* command_line(void* arg) {
         }
 
         char* value = execute(table, buffer);
-        printf("%s\n", value);
+
+        if (value != NULL) printf("%s\n", value);
 
     } // while
 }
@@ -40,7 +41,6 @@ void* command_line(void* arg) {
 int get_line(const char* prompt, char* buff, size_t sz) {
     int ch, extra;
 
-    // get line with buffer overflow protection
     if (prompt != NULL) {
         printf("%s ", prompt);
         fflush(stdout);

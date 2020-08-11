@@ -1,6 +1,6 @@
 
 CC=clang
-CFLAGS=-g -pthread -Wall -Werror -fPIC
+CFLAGS=-g -pthread -fPIC
 BINS=server scratch
 LIBS=libtable.so
 OBJS=table.o server.o thread_pool.o work_queue.o cli.o
