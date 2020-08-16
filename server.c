@@ -20,7 +20,7 @@
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
 
-int main() {
+int main(int argc, char** argv) {
 
     int server_socket, client_socket, addr_size;
     SA_IN server_addr, client_addr;
@@ -42,9 +42,14 @@ int main() {
     
     printf("Listening on %d\n", SERVER_PORT);
 
-    // starts cli thread
-    pthread_t* cli_thread = (pthread_t*)malloc(sizeof(pthread_t));
-    pthread_create(cli_thread, NULL, command_line, t);
+    // choose to run cli or not
+    if (argc > 1 && strcmp(argv[1], "--no-cli") == 0) {
+        puts("starting with no cli");
+    } else {
+        // starts cli thread
+        pthread_t* cli_thread = (pthread_t*)malloc(sizeof(pthread_t));
+        pthread_create(cli_thread, NULL, command_line, t);
+    }
 
     while(true) {
         addr_size = sizeof(SA_IN);
