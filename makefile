@@ -1,9 +1,9 @@
 
 CC=clang
-CFLAGS=-g -pthread -fPIC
-BINS=server scratch
-LIBS=libtable.so
-OBJS=table.o server.o thread_pool.o work_queue.o cli.o
+CFLAGS=-g -pthread -fPIC -Iheaders
+BINS=build/server
+LIBS=obj/libtable.so
+OBJS=obj/table.o obj/server.o obj/thread_pool.o obj/work_queue.o obj/cli.o
 DESTDIR=/usr
 LIBDIR=$(DESTDIR)/lib
 INCDIR=$(DESTDIR)/include
@@ -13,13 +13,10 @@ all: $(LIBS) $(BINS)
 server: $(OBJS)
 	$(CC) $(CFLAGS) -ltable -o $@ $^
 
-scratch: $(OBJS)
-	$(CC) $(CFLAGS) -ltable -o $@ $^
-
-%.o: %.c
+obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
-libtable.so: table.o
+obj/libtable.so: obj/table.o
 	$(CC) $(CFLAGS) -shared -o $@ $^
 
 install:
@@ -30,6 +27,6 @@ install:
 	ldconfig -n $(LIBDIR)
 
 clean:
-	rm -r *.o
-	rm -r *.so
-	rm -rf $(BINS)
+	rm -r obj/*.o
+	rm -r obj/*.so
+	rm -rf build/$(BINS)

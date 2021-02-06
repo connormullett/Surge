@@ -1,8 +1,8 @@
 
-#include "work_queue.h"
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <work_queue.h>
 
 node_t* head = NULL;
 node_t* tail = NULL;

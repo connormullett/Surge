@@ -12,8 +12,8 @@
 #include <limits.h>
 #include <pthread.h>
 
-#include "table.h"
-#include "work_queue.h"
+#include <table.h>
+#include <work_queue.h>
 
 #define SOCKETERROR (-1)
 #define THREAD_POOL_SIZE 20

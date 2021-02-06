@@ -1,10 +1,11 @@
 
-#include "cli.h"
-#include "thread_pool.h"
-#include "table.h"
-
 #include <string.h>
 #include <stdbool.h>
+
+#include <cli.h>
+#include <thread_pool.h>
+#include <table.h>
+
 
 void* command_line(void* arg) {
     table_t* table = (table_t*)arg;

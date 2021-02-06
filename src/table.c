@@ -1,6 +1,7 @@
 
-#include "table.h"
 #include <stdio.h>
+
+#include <table.h>
 
 uint hash(const char* key) {
     uint hash_index = 0;

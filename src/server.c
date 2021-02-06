@@ -9,10 +9,10 @@
 #include <limits.h>
 #include <pthread.h>
 
-#include "work_queue.h"
-#include "thread_pool.h"
-#include "cli.h"
-#include "table.h"
+#include <work_queue.h>
+#include <thread_pool.h>
+#include <cli.h>
+#include <table.h>
 
 #define SERVER_PORT 5250
 #define SERVER_BACKLOG 100
