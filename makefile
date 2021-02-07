@@ -1,5 +1,5 @@
 
-CC=clang
+CC=gcc
 CFLAGS=-g -pthread -fPIC -Iheaders
 BINS=build/server
 LIBS=obj/libtable.so
