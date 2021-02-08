@@ -41,6 +41,8 @@ char *cli_get(table_t *t, request_t *request);
 char *cli_set(table_t *t, request_t *request);
 char *cli_del(table_t *t, request_t *request);
 char *cli_dump(table_t *t, request_t *request);
+char *cli_help(table_t *t, request_t *request);
+char *cli_quit(table_t *t, request_t *request);
 
 pthread_t *thread_pool_init(table_t *t);
 

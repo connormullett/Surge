@@ -21,7 +21,6 @@ typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
 
 int main(int argc, char **argv) {
-
   int server_socket, client_socket, addr_size;
   SA_IN server_addr, client_addr;
 

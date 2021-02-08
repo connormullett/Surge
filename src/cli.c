@@ -1,8 +1,9 @@
 
+#include "../headers/cli.h"
+
 #include <stdbool.h>
 #include <string.h>
 
-#include "../headers/cli.h"
 #include "../headers/table.h"
 #include "../headers/thread_pool.h"
 
@@ -34,10 +35,9 @@ void *command_line(void *arg) {
 
     char *value = execute(table, buffer);
 
-    if (value != NULL)
-      printf("%s\n", value);
+    if (value != NULL) printf("%s\n", value);
 
-  } // while
+  }  // while
 }
 
 int get_line(const char *prompt, char *buff, size_t sz) {
@@ -48,13 +48,11 @@ int get_line(const char *prompt, char *buff, size_t sz) {
     fflush(stdout);
   }
 
-  if (fgets(buff, sz, stdin) == NULL)
-    return NO_INPUT;
+  if (fgets(buff, sz, stdin) == NULL) return NO_INPUT;
 
   if (buff[strlen(buff) - 1] != '\n') {
     extra = 0;
-    while (((ch = getchar()) != '\n') && (ch != EOF))
-      extra = 1;
+    while (((ch = getchar()) != '\n') && (ch != EOF)) extra = 1;
     return (extra == 1) ? TOO_LONG : OK;
   }
 

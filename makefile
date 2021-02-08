@@ -1,5 +1,5 @@
 
-CC=gcc
+CC=clang
 CFLAGS=-g -pthread -fPIC -Iheaders
 BINS=build/server
 LIBS=obj/libtable.so
@@ -10,7 +10,7 @@ INCDIR=$(DESTDIR)/include
 
 all: $(LIBS) $(BINS)
 
-server: $(OBJS)
+$(BINS): $(OBJS)
 	$(CC) $(CFLAGS) -ltable -o $@ $^
 
 obj/%.o: src/%.c
@@ -27,6 +27,4 @@ install:
 	ldconfig -n $(LIBDIR)
 
 clean:
-	rm -r obj/*.o
-	rm -r obj/*.so
-	rm -rf build/$(BINS)
+	rm -r $(BINS) $(LIBS) $(OBJS)

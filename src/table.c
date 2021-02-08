@@ -1,15 +1,14 @@
 
-#include <stdio.h>
-
 #include "../headers/table.h"
+
+#include <stdio.h>
 
 uint hash(const char *key) {
   uint hash_index = 0;
   uint i = 0;
   int key_len = strlen(key);
 
-  for (; i < key_len; i++)
-    hash_index = hash_index * 37 + key[i];
+  for (; i < key_len; i++) hash_index = hash_index * 37 + key[i];
   hash_index = hash_index % TABLE_SIZE;
 
   return hash_index;
@@ -51,7 +50,6 @@ void table_t_set(table_t *t, char *key, char *value) {
 
   // loop list
   while (tmp != NULL) {
-
     // update value if key exists
     if (strcmp(key, tmp->key) == 0) {
       tmp->value = value;
@@ -142,7 +140,6 @@ void table_t_delete(table_t *t, const char *key) {
 }
 
 void table_t_dump(table_t *t) {
-
   if (t->size == 0) {
     return;
   }
@@ -152,8 +149,7 @@ void table_t_dump(table_t *t) {
   for (int i = 0; i < TABLE_SIZE; i++) {
     entry *e = entries[i];
 
-    if (e == NULL)
-      continue;
+    if (e == NULL) continue;
 
     while (e != NULL) {
       printf("index [%d]: '%s', '%s' -> ", i, e->key, e->value);

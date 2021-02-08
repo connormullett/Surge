@@ -1,10 +1,15 @@
 
 #include "../headers/thread_pool.h"
 
-char *builtin_str[] = {"get", "set", "del", "dump"};
+char *builtin_str[] = {"get", "set", "del", "dump", "help", "quit"};
 
-char *(*builtin_func[])(table_t *t, request_t *request) = {&cli_get, &cli_set,
-                                                           &cli_del, &cli_dump};
+char *(*builtin_func[])(table_t *t, request_t *request) = {
+    &cli_get, &cli_set, &cli_del, &cli_dump, &cli_help, &cli_quit};
+
+char *builtin_help_strings[] = {
+    "get value by key",     "set a new key/value pair",
+    "delete entry",         "dump table contents to stdout",
+    "display help message", "exit the program"};
 
 int cli_num_builtins() { return sizeof(builtin_str) / sizeof(char *); }
 
@@ -23,7 +28,6 @@ void *thread_work_job(void *arg) {
     pthread_mutex_unlock(&queue_thread_lock);
 
     if (pclient != NULL) {
-
       printf("Connection: handling job %d\n", *pclient);
       handle_connection(pclient, table);
     }
@@ -42,8 +46,7 @@ void *handle_connection(void *p_client_socket, table_t *table) {
   while ((bytes_read = read(client_socket, buffer + msgsize,
                             sizeof(buffer) - msgsize)) > 0) {
     msgsize += bytes_read;
-    if (msgsize > BUFSIZE - 1 || buffer[msgsize - 1] == '\n')
-      break;
+    if (msgsize > BUFSIZE - 1 || buffer[msgsize - 1] == '\n') break;
   }
 
   check(bytes_read, "read error");
@@ -67,7 +70,7 @@ char *execute(table_t *table, char *buffer) {
   request_t *request = parse_request_t(buffer);
 
   if (request == NULL) {
-    // error out
+    puts("An error occured");
   }
 
   pthread_mutex_lock(&table_thread_lock);
@@ -104,6 +107,20 @@ char *cli_dump(table_t *t, request_t *request) {
   return NULL;
 }
 
+char *cli_help(table_t *t, request_t *request) {
+  for (int i = 0; i < cli_num_builtins(); i++) {
+    printf("%s\t%s\n", builtin_str[i], builtin_help_strings[i]);
+  }
+
+  return NULL;
+}
+
+char *cli_quit(table_t *t, request_t *request) {
+  // destruct and free pointers
+  // quit program
+  return NULL;
+}
+
 request_t *init_request_t(void) {
   request_t *out = (request_t *)malloc(sizeof(request_t));
   out->operation = NULL;
@@ -127,8 +144,7 @@ request_t *parse_request_t(char *buffer) {
   request->operation = (char *)malloc(sizeof(char) * strlen(op));
   strcpy(request->operation, op);
 
-  if (strcmp(op, "dump") == 0)
-    return request;
+  if (strcmp(op, "dump") == 0) return request;
 
   char *key = strtok(NULL, TOK_DELIM);
   if (key != NULL) {
@@ -136,8 +152,7 @@ request_t *parse_request_t(char *buffer) {
     strcpy(request->key, key);
   }
 
-  if (key != NULL && strcmp(key, "get") == 0)
-    return request;
+  if (key != NULL && strcmp(key, "get") == 0) return request;
 
   char *val = strtok(NULL, TOK_DELIM);
   if (val != NULL) {
