@@ -107,18 +107,23 @@ char *cli_dump(table_t *t, request_t *request) {
   return NULL;
 }
 
+#define MESSAGE_BUFFER_SIZE 1000
 char *cli_help(table_t *t, request_t *request) {
+  char *out = (char *)malloc(sizeof(char) * MESSAGE_BUFFER_SIZE);
+  char *entry = (char *)malloc(sizeof(char) * MESSAGE_BUFFER_SIZE);
+
   for (int i = 0; i < cli_num_builtins(); i++) {
-    printf("%s\t%s\n", builtin_str[i], builtin_help_strings[i]);
+    sprintf(entry, "%s\t%s\n", builtin_str[i], builtin_help_strings[i]);
+    strncat(out, entry, strlen(entry));
   }
 
-  return NULL;
+  free(entry);
+  return out;
 }
 
 char *cli_quit(table_t *t, request_t *request) {
-  // destruct and free pointers
-  // quit program
-  return NULL;
+  table_t_drop(t);
+  exit(0);
 }
 
 request_t *init_request_t(void) {

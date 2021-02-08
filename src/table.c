@@ -139,6 +139,25 @@ void table_t_delete(table_t *t, const char *key) {
   }
 }
 
+void table_t_drop(table_t *t) {
+  entry **entries = t->entries;
+  entry *next;
+
+  for (int i = 0; i < TABLE_SIZE; i++) {
+    entry *e = entries[i];
+
+    if (e == NULL) continue;
+
+    while (e != NULL) {
+      next = e->next;
+      free(e->key);
+      free(e->value);
+      free(e);
+      e = next;
+    }
+  }
+}
+
 void table_t_dump(table_t *t) {
   if (t->size == 0) {
     return;

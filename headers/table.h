@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define TABLE_SIZE 20
-#define MAX_TABLE_SIZE 4294967295 // uint max
+#define MAX_TABLE_SIZE 4294967295  // uint max
 #define MAX_LOAD_FACTOR 1.5
 
 typedef unsigned int uint;
@@ -34,6 +34,7 @@ uint table_t_get_capacity(table_t *t);
 uint table_t_get_size(table_t *t);
 int table_t_get_load_factor(table_t *t);
 void table_t_delete(table_t *t, const char *key);
+void table_t_drop(table_t *t);
 
 void table_t_resize_and_map(table_t *t);
 

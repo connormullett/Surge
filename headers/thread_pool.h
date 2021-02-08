@@ -45,5 +45,4 @@ char *cli_help(table_t *t, request_t *request);
 char *cli_quit(table_t *t, request_t *request);
 
 pthread_t *thread_pool_init(table_t *t);
-
 #endif

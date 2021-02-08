@@ -1,7 +1,7 @@
 
 CC=clang
 CFLAGS=-g -pthread -fPIC -Iheaders
-BINS=build/server
+BINS=server
 LIBS=obj/libtable.so
 OBJS=obj/table.o obj/server.o obj/thread_pool.o obj/work_queue.o obj/cli.o
 DESTDIR=/usr
