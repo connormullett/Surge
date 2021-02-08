@@ -1,10 +1,10 @@
 
 #include "../headers/thread_pool.h"
 
-char *builtin_str[] = {"get", "set", "del", "dump", "help", "quit"};
-
 char *(*builtin_func[])(table_t *t, request_t *request) = {
     &cli_get, &cli_set, &cli_del, &cli_dump, &cli_help, &cli_quit};
+
+char *builtin_str[] = {"get", "set", "del", "dump", "help", "quit"};
 
 char *builtin_help_strings[] = {
     "get value by key",     "set a new key/value pair",
@@ -123,6 +123,7 @@ char *cli_help(table_t *t, request_t *request) {
 
 char *cli_quit(table_t *t, request_t *request) {
   table_t_drop(t);
+  puts("closing..");
   exit(0);
 }
 
