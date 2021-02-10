@@ -12,11 +12,9 @@ void *command_line(void *arg) {
   int input;
   bool error_flag = false;
 
-  char buffer[MAX_COMMAND_SIZE];
+  char *buffer = (char *)malloc(sizeof(char) * MAX_COMMAND_SIZE);
   const char *prompt = "> ";
   int sz = sizeof(buffer);
-
-  // TODO: graceful exits
 
   while (1) {
     memset(buffer, 0, MAX_COMMAND_SIZE);
@@ -36,7 +34,6 @@ void *command_line(void *arg) {
     char *value = execute(table, buffer);
 
     if (value != NULL) printf("%s\n", value);
-
   }  // while
 }
 

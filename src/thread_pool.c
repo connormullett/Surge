@@ -142,6 +142,8 @@ request_t *parse_request_t(char *buffer) {
   size_t len = strlen(buffer);
   char *copy = (char *)malloc(sizeof(char) * len);
   memcpy(copy, buffer, len);
+  // nullbyte to prevent undefined
+  copy[len] = '\0';
 
   request_t *request = init_request_t();
 
